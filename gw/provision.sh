@@ -13,7 +13,7 @@ apt-get install -y net-tools iputils-ping curl tcpdump nmap
 
 echo "Cortafuegos basico hacemos NAT"
 sysctl -w net.ipv4.ip_forward=1
-iptables -t nat -A POSTROUTING -s 172.1.99.0/24 -o eth0 -j MASQUERADE
-iptables -t nat -A POSTROUTING -s 172.2.99.0/24 -o eth0 -j MASQUERADE
-
+iptables -t nat -A POSTROUTING -s 172.1.5.0/24 -o eth0 -j MASQUERADE
+iptables -t nat -A POSTROUTING -s 172.2.5.0/24 -o eth0 -j MASQUERADE
+iptables -t nat -A POSTROUTING -s 172.3.5.0/24 -o eth0 -j MASQUERADE
 echo "Gateway configurado"
