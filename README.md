@@ -32,7 +32,7 @@ Red de usuarios estándar. Navegación restringida a través del proxy.
   * **Rol:** Máquina de salto y gestión. El administrador despliega scripts, se conecta por SSH a los demás equipos.
 * **Equipo Empleado (`empleado`)**
   * **Hostname:** `empleadopc-sgb`
-  * **IP:** `172.2.N.100`
+  * **IP:** `172.2.5.100`
   * **Rol:** Simula un empleado de la PYME.
 
 ### 4. DMZ - Zona Desmilitarizada (`172.1.5.0/24`)
