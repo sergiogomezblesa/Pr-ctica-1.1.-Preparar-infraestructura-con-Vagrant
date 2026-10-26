@@ -129,3 +129,11 @@ Vagrant.configure("2") do |config|
   end
 end
 
+# Dentro de config.vm.define "adminpc" do |adminpc|
+ adminpc.vm.provision "file", source: "adminpc/claves-ssh/clave_admin_privada",
+destination: "/tmp/id_ed25519"
+ adminpc.vm.provision "file", source: "adminpc/claves-ssh/clave_admin.pub",
+destination: "/tmp/id_ed25519.pub"
+ # Dentro de config.vm.define "www" do |www|
+ www.vm.provision "file", source: "adminpc/claves-ssh/clave_admin.pub", destination:
+"/tmp/id_ed25519.pub"
