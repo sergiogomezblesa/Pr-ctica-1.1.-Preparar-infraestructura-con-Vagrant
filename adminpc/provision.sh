@@ -1,34 +1,27 @@
-#!/bin/sh
-
+#!/usr/bin/env bash
 # El script se detiene si hay errores
 set -e
+export DEBIAN_FRONTEND=noninteractive
 echo "########################################"
 echo " Aprovisionando adminpc "
 echo "########################################"
-echo "-----------------"
-echo "Actualizando repositorios"
-apk update
-apk add curl nmap tcpdump wget bash iputils
-
-# 1. Crear el usuario administrador local en adminpc (Alpine)
-echo "=> Creando usuario administrador..."
-adduser -D admin_sergio
-adduser admin_sergio wheel
-echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/wheel
-echo "=> Importando claves SSH desde el anfitrión..."
-
-# 2. Movemos las llaves inyectadas por Vagrant en /tmp
+apt-get update -y
+apt-get install -y sudo curl nmap tcpdump wget iputils-ping
+# Usuario administrador (en Debian el grupo de administradores es "sudo", no "wheel")
+echo "=> Creamos usuario administrador..."
+id admin_sergio >/dev/null 2>&1 || useradd -m -s /bin/bash admin_sergio
+usermod -aG sudo admin_sergio
+echo "admin_sergio ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/admin_sergio
+chmod 440 /etc/sudoers.d/admin_sergio
+# Claves SSH inyectadas por Vagrant en /tmp
+echo "=> Importamos claves SSH"
 mkdir -p /home/admin_sergio/.ssh
-mv /tmp/id_ed25519 /home/admin_sergio/.ssh/id_ed25519
-mv /tmp/id_ed25519.pub /home/admin_sergio/.ssh/id_ed25519.pub
-
-# Limpiar posibles retornos de carro de Windows (CRLF)
-sed -i 's/\r$//' /home/admin_sergio/.ssh/id_ed25519
-
-# 3. Ajustamos los permisos por seguridad
+cp /tmp/id_ed25519 /home/admin_sergio/.ssh/id_ed25519
+cp /tmp/id_ed25519.pub /home/admin_sergio/.ssh/id_ed25519.pub
+# Por si las claves vienen de Windows con finales de línea CRLF
+sed -i 's/\r$//' /home/admin_sergio/.ssh/id_ed25519 /home/admin_sergio/.ssh/id_ed25519.pub
 chown -R admin_sergio:admin_sergio /home/admin_sergio/.ssh
 chmod 700 /home/admin_sergio/.ssh
 chmod 600 /home/admin_sergio/.ssh/id_ed25519
 chmod 644 /home/admin_sergio/.ssh/id_ed25519.pub
-
 echo "------ FIN ------"
